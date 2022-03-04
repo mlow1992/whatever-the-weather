@@ -26,6 +26,14 @@ var fifthDay = document.createElement("h4");
 
 var cityCounter = 0;
 var cities = []
+var displayTime = function() {
+    var time = moment().format('LL');
+    $("#current-day").html(time)
+}
+
+$(document).ready(function() {
+    displayTime();
+});
 
 var searchBtnHandler = function(event) {
     event.preventDefault();
@@ -129,7 +137,7 @@ var currentWeatherDisplay = function(cityData) {
 
     humidity.textContent = "Humidity: " + cityData.current.humidity + " %";
 
-    
+
     UV.textContent = "UV Index: " + cityData.current.uvi;
 
     bigWeather.appendChild(icon);
