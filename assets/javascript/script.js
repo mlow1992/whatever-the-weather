@@ -3,6 +3,8 @@ var searchBtn = document.querySelector("#searchBtn");
 var citySearch = document.querySelector("#city-search");
 var currentWeather = document.querySelector("current-weather");
 var fiveDay = document.querySelector("weather-cards");
+var lat = "";
+var long = "";
 
 var day1 = document.querySelector("day_1");
 var day2 = document.querySelector("day_2");
@@ -20,6 +22,7 @@ var searchBtnHandler = function(event) {
     
     if (city) {
         getWeatherData(city);
+        weatherReport();
 
     } else {
         alert("Please enter a city")
@@ -71,9 +74,32 @@ var displayResult = function(city, state) {
         alert("city not found");
         return;
     }
-    if (!state) {
-        alert("please specify a state")
+
+    for (var i = 0; i < city.length; i++) {
+
+        lat = city[0].lat;
+        long = city[0].lon;
+        console.log(lat, long);
     }
+}
+
+console.log(lat,long);
+
+var weatherReport = function() {
+    var apiURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + long + "&appid=93ec56821a727ff38ffe9140f6060c88"
+    fetch(apiURL)
+        .then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data) {
+                    console.log(data);
+                });
+            } else {
+                alert("Error: " + response.statusText);
+            }
+        })
+        .catch(function(error) {
+            alert("Unable to connect")
+        });
 }
 
 var loadSearch = function() {
