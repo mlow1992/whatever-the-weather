@@ -1,16 +1,29 @@
 var searchEl = document.querySelector("#city");
 var searchBtn = document.querySelector("#searchBtn");
 var citySearch = document.querySelector("#city-search");
-var currentWeather = document.querySelector("current-weather");
-var fiveDay = document.querySelector("weather-cards");
+var currentWeather = document.querySelector("#current-weather");
+var fiveDay = document.querySelector("#weather-cards");
+var day1 = document.querySelector("#day_1");
+var day2 = document.querySelector("#day_2");
+var day3 = document.querySelector("#day_3");
+var day4 = document.querySelector("#day_4");
+var day5 = document.querySelector("#day_5");
 var lat = "";
 var long = "";
 
-var day1 = document.querySelector("day_1");
-var day2 = document.querySelector("day_2");
-var day3 = document.querySelector("day_3");
-var day4 = document.querySelector("day_4");
-var day5 = document.querySelector("day_5");
+var bigWeather = document.createElement("div");
+var cityName = document.createElement("h3");
+var temp = document.createElement("h3");
+var wind = document.createElement("h3");
+var humidity = document.createElement("h3");
+var UV = document.createElement("h3");
+var icon = document.createElement("h4");
+var firstDay = document.createElement("h4");
+var secondDay = document.createElement("h4");
+var thirdDay = document.createElement("h4");
+var fourthDay = document.createElement("h4");
+var fifthDay = document.createElement("h4");
+
 var cityCounter = 0;
 var cities = []
 
@@ -22,7 +35,6 @@ var searchBtnHandler = function(event) {
     
     if (city) {
         getWeatherData(city);
-        weatherReport();
 
     } else {
         alert("Please enter a city")
@@ -33,7 +45,8 @@ var searchBtnHandler = function(event) {
         createSearchEl();
         cities.push(city)
     }
-    
+    cityName.textContent = city
+    bigWeather.appendChild(cityName);    
 }
 
 var createSearchEl = function() {
@@ -59,6 +72,7 @@ var getWeatherData = function(city, state) {
             if(response.ok) {
                 response.json().then(function(data) {
                     displayResult(data);
+                    weatherReport();
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -77,21 +91,20 @@ var displayResult = function(city, state) {
 
     for (var i = 0; i < city.length; i++) {
 
-        lat = city[0].lat;
-        long = city[0].lon;
+        lat = city[i].lat;
+        long = city[i].lon;
         console.log(lat, long);
     }
 }
 
-console.log(lat,long);
-
 var weatherReport = function() {
-    var apiURL = "http://api.openweathermap.org/data/2.5/weather?lat=" + lat + "&lon=" + long + "&appid=93ec56821a727ff38ffe9140f6060c88"
+    var apiURL = "http://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + long + "&appid=93ec56821a727ff38ffe9140f6060c88"
     fetch(apiURL)
         .then(function(response) {
             if(response.ok) {
                 response.json().then(function(data) {
                     console.log(data);
+                    currentWeatherDisplay(data);
                 });
             } else {
                 alert("Error: " + response.statusText);
@@ -101,6 +114,46 @@ var weatherReport = function() {
             alert("Unable to connect")
         });
 }
+
+var currentWeatherDisplay = function(cityData) {
+    var weatherIconURL = cityData.current.weather[0].icon;
+    var iconIMG = "http://openweathermap.org/img/wn/" + weatherIconURL + "@2x.png";
+    icon.innerHTML = "<img src=" + iconIMG + ">";
+    
+    temp.textContent = "Temp: " + cityData.current.temp + " °F";
+
+    
+    wind.textContent = "Wind: " + cityData.current.wind_speed + " mph";
+
+
+    humidity.textContent = "Humidity: " + cityData.current.humidity + " %";
+
+    UV.textContent = "UV Index: " + cityData.current.uvi;
+
+    bigWeather.appendChild(icon);
+    bigWeather.appendChild(temp);
+    bigWeather.appendChild(wind);
+    bigWeather.appendChild(humidity);
+    bigWeather.appendChild(UV);
+    currentWeather.appendChild(bigWeather);
+
+    fiveDayForecast(cityData.daily)
+}
+
+var fiveDayForecast = function(daily) {
+
+    var day = [];
+    var day_temp = [];
+    var day_wind = [];
+    var day_hum = [];
+    var day_icon = [];
+
+    
+ 
+
+}
+
+
 
 var loadSearch = function() {
     
